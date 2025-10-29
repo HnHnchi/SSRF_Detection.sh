@@ -1,4 +1,4 @@
-SSRF Hunter — Portable SSRF Scanner
+#SSRF Hunter — Portable SSRF Scanner
 
 One-line: Lightweight Bash SSRF scanner for authorized security testing (URL params, headers, POST bodies).
 
