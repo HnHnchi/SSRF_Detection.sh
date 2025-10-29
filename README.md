@@ -1,4 +1,4 @@
-#SSRF Hunter — Portable SSRF Scanner
+# SSRF Hunter — Portable SSRF Scanner
 
 One-line: Lightweight Bash SSRF scanner for authorized security testing (URL params, headers, POST bodies).
 
@@ -6,19 +6,28 @@ Warning / Legal: Use only on systems you own or have explicit permission to test
 
 Install
 # create script and make executable
+bash 
+```
 curl -sS -O https://example.com/ssrf_scanner.sh   # or copy the provided script
 chmod +x ssrf_scanner.sh
 # (optional) install helpers
 sudo apt update && sudo apt install -y curl jq parallel
+```
 
 Quick usage
 # auto-detect params in URL
+bash
+```
 ./ssrf_scanner.sh --url "http://vuln.local/search?url=https://ok"
+```
 
 # test specific param, use proxy, custom payloads
+bash
+```
 ./ssrf_scanner.sh --url "http://vuln.local/" --params url --payloads payloads.txt --proxy http://127.0.0.1:8080
+```
 
-Key features
+# Key features
 
 Injects payloads into query params, headers, POST form or JSON bodies.
 
