@@ -1,50 +1,135 @@
-# SSRF Hunter — Portable SSRF Scanner
+# 🔍 SSRF Scanner
 
-One-line: Lightweight Bash SSRF scanner for authorized security testing (URL params, headers, POST bodies).
+A lightweight tool to detect Server-Side Request Forgery vulnerabilities automatically.
 
-Warning / Legal: Use only on systems you own or have explicit permission to test. Unauthorized testing is illegal.
+---
 
-Install
-# create script and make executable
-bash 
+## 📌 Table of Contents
+- [Overview](#-overview)
+- [Features](#-features)
+- [How It Works](#-how-it-works)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Sample Output](#-sample-output)
+- [Payloads Used](#-payloads-used)
+- [Project Structure](#-project-structure)
+- [Notes](#-notes)
+- [License](#-license)
+
+---
+
+## 🧠 Overview
+
+This tool scans web applications for **SSRF (Server-Side Request Forgery)** vulnerabilities by automatically injecting crafted payloads into parameters and analyzing server responses.
+
+It tests:
+
+- Localhost access  
+- Internal networks  
+- Metadata endpoints  
+- Dangerous schemes such as `file://`
+
+> ⚠️ This is designed for **educational and penetration testing purposes only**.
+
+---
+
+## ✨ Features
+
+- 🚀 Fast multi-threaded scanning  
+- 🎯 Auto-detection of vulnerable parameters  
+- 🧪 Multiple SSRF payload categories  
+- 🔁 Follows redirects when required  
+- 📝 Clear console output and logging  
+- ⚠️ Simple and beginner-friendly codebase  
+
+---
+
+## 🛠️ How It Works
+
+1. Extracts parameters from a target URL.  
+2. Replaces their values with SSRF payloads.  
+3. Sends requests with each payload.  
+4. Identifies SSRF indicators such as:
+   - `localhost` / `127.0.0.1` responses  
+   - Internal IP blocks (10.x.x.x, 172.16.x.x, etc.)  
+   - Cloud metadata responses  
+   - Error messages indicating SSRF processing  
+
+---
+
+## 📦 Installation
+
+### Clone the repository
+```bash
+git clone https://github.com/username/ssrf-scanner.git
+cd ssrf-scanner
+Install dependencies
+pip install -r requirements.txt
 ```
-curl -sS -O https://example.com/ssrf_scanner.sh   # or copy the provided script
-chmod +x ssrf_scanner.sh
-# (optional) install helpers
-sudo apt update && sudo apt install -y curl jq parallel
+
+▶️ Usage
+```
+Basic command
+python ssrf_scanner.py "https://example.com/page?id=123&image=http://site.com/a.png"
 ```
 
-Quick usage
-# auto-detect params in URL
-bash
+Advanced
 ```
-./ssrf_scanner.sh --url "http://vuln.local/search?url=https://ok"
+python ssrf_scanner.py --url <target> --threads 10 --verbose
 ```
 
-# test specific param, use proxy, custom payloads
-bash
+Arguments
 ```
-./ssrf_scanner.sh --url "http://vuln.local/" --params url --payloads payloads.txt --proxy http://127.0.0.1:8080
+--url / -u       Target URL
+--threads / -t   Number of threads (default: 5)
+--verbose / -v   Show full request/response details
 ```
 
-# Key features
+🧾 Sample Output
+[+] Testing parameter: image
+[+] Payload: http://127.0.0.1:80
+[!] Possible SSRF detected! Response contains 'Apache/2.4.1 (Ubuntu)'
 
-Injects payloads into query params, headers, POST form or JSON bodies.
+[+] Payload: http://169.254.169.254/latest/meta-data
+[!] SSRF confirmed: Metadata endpoint responded with HTTP 200
 
-Concurrency via parallel (fallback to background jobs).
+🧨 Payloads Used
+🔹 Localhost access
+```
+http://127.0.0.1/
+http://localhost/
+http://0.0.0.0/
+```
 
-Basic heuristics flag internal IPs, metadata endpoints, passwd, timeouts/errors.
+🔹 Internal network probing
+```
+http://10.0.0.1/
+http://172.16.0.1/
+http://192.168.1.1/
+```
+🔹 Cloud metadata
+```
+http://169.254.169.254/latest/meta-data/
+http://metadata.google.internal
+```
 
-CSV output for triage (ssrf_results.csv).
+🔹 Dangerous schemes
+```
+file:///etc/passwd
+gopher://127.0.0.1:11211/
+```
 
-Output
+📁 Project Structure
+ssrf-scanner/
+│── ssrf_scanner.py
+│── payloads.txt
+│── README.md
+│── requirements.txt
 
-CSV columns: timestamp,target,tested_param,payload,final_url,status,error,indicators,snippet.
+📝 Notes
 
-Extending / OOB
+Run only on systems you have permission to test.
 
-Add custom payloads in payloads.txt. For reliable detection integrate an OOB collaborator (interact.sh / Burp Collaborator) — only on authorized targets.
+Some responses may be blocked by WAFs or rate-limiting.
 
-License & Ethics
-
-Open for defensive/security use. Report responsibly and follow target scope and disclosure rules.
+Add your own payloads in payloads.txt for more power.
