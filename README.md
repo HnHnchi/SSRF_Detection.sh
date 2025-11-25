@@ -120,16 +120,20 @@ gopher://127.0.0.1:11211/
 ```
 
 📁 Project Structure
+```
 ssrf-scanner/
 │── ssrf_scanner.py
 │── payloads.txt
 │── README.md
 │── requirements.txt
+```
 
 📝 Notes
+```
 
 Run only on systems you have permission to test.
 
 Some responses may be blocked by WAFs or rate-limiting.
 
 Add your own payloads in payloads.txt for more power.
+```
